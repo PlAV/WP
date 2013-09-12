@@ -24,6 +24,7 @@ import android.widget.Toast;
 public class MainActivity extends Activity implements OnItemClickListener {
 
 	GridView gvMain;
+	ProgressDialog progDialog;
 	ArrayAdapter<String> adapter;
 	ImageView img1, img2, img3, img4, img5;
 
@@ -159,11 +160,18 @@ public class MainActivity extends Activity implements OnItemClickListener {
 		setContentView(R.layout.activity_main);
 		gridview = (GridView) findViewById(R.id.gridview);
 
+		progDialog = new ProgressDialog(MainActivity.this);
+		progDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+		progDialog.setMessage("Loading...");
+		progDialog.setCancelable(false);
+		progDialog.show();
+
 		new DownloadImageTask().execute(urls);
 
 	}
 
 	class DownloadImageTask extends AsyncTask<String, Void, ArrayList<Bitmap>> {
+
 		@Override
 		protected ArrayList<Bitmap> doInBackground(String... params) {
 			publishProgress(new Void[] {});
@@ -194,12 +202,7 @@ public class MainActivity extends Activity implements OnItemClickListener {
 		}
 
 		protected void onPreExecute(ProgressDialog progress) {
-			progress = new ProgressDialog(MainActivity.this);
 
-			progress.setMessage("Загрузка каталога...");
-			progress.setIndeterminate(true);
-			progress.setCancelable(true);
-			progress.show();
 		}
 
 		@Override
@@ -215,7 +218,7 @@ public class MainActivity extends Activity implements OnItemClickListener {
 			ImageAdapter adapter = new ImageAdapter(MainActivity.this, result);
 			gridview.setAdapter(adapter);
 			gridview.setOnItemClickListener(MainActivity.this);
-
+			progDialog.hide();
 			/*
 			 * for (Integer i = 0; i < result.size(); i++) {
 			 * 
