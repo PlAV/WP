@@ -16,7 +16,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -25,15 +24,28 @@ public class MainActivity extends Activity implements OnItemClickListener {
 
 	GridView gvMain;
 	ProgressDialog progDialog;
-	ArrayAdapter<String> adapter;
+	// ArrayAdapter<String> adapter;
 	ImageView img1, img2, img3, img4, img5;
 
 	final int PROGRESS_DLG_ID = 666;
 	final static String DEBUG_TAG = "+++ImageDownloader+++";
 	ArrayList<Bitmap> bitmapArray;
 	GridView gridview;
+	ImageAdapter adapter;
 
 	String[] urls = { "http://huuah.com/images/progress2.png",
+			"http://huuah.com/images/progress2.png",
+			"http://huuah.com/images/progress2.png",
+			"http://huuah.com/images/progress2.png",
+			"http://huuah.com/images/progress2.png",
+			"http://huuah.com/images/progress2.png",
+			"http://huuah.com/images/progress2.png",
+			"http://huuah.com/images/progress2.png",
+			"http://huuah.com/images/progress2.png",
+			"http://huuah.com/images/progress2.png",
+			"http://huuah.com/images/progress2.png",
+			"http://huuah.com/images/progress2.png",
+			"http://huuah.com/images/progress2.png",
 			"http://huuah.com/images/progress2.png",
 			"http://huuah.com/images/progress2.png",
 			"http://huuah.com/images/progress2.png",
@@ -60,18 +72,22 @@ public class MainActivity extends Activity implements OnItemClickListener {
 		progDialog = new ProgressDialog(MainActivity.this);
 		progDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 		progDialog.setMessage("Loading...");
-		progDialog.setCancelable(false);
+		//progDialog.setCancelable(false);
 		progDialog.show();
 
 		new DownloadImageTask().execute(urls);
 
+		adapter = new ImageAdapter(MainActivity.this);
+		gridview.setAdapter(adapter);
+		gridview.setOnItemClickListener(MainActivity.this);
+
 	}
 
-	class DownloadImageTask extends AsyncTask<String, Void, ArrayList<Bitmap>> {
+	class DownloadImageTask extends AsyncTask<String, Bitmap, ArrayList<Bitmap>> {
 
 		@Override
 		protected ArrayList<Bitmap> doInBackground(String... params) {
-			publishProgress(new Void[] {});
+		//	publishProgress(new Void[] {});
 
 			bitmapArray = new ArrayList<Bitmap>();
 			Integer count = 0;
@@ -82,6 +98,8 @@ public class MainActivity extends Activity implements OnItemClickListener {
 					URL urlConn = new URL(params[i]);
 					input = urlConn.openStream();
 					Bitmap img = BitmapFactory.decodeStream(input);
+					
+					publishProgress(img);
 					bitmapArray.add(img);
 				} catch (MalformedURLException e) {
 					Log.d(DEBUG_TAG, "Oops, Something wrong with URL...");
@@ -95,7 +113,7 @@ public class MainActivity extends Activity implements OnItemClickListener {
 			}
 			//
 
-			return bitmapArray;
+			return null;
 		}
 
 		protected void onPreExecute(ProgressDialog progress) {
@@ -103,29 +121,19 @@ public class MainActivity extends Activity implements OnItemClickListener {
 		}
 
 		@Override
-		protected void onProgressUpdate(Void... values) {
-			super.onProgressUpdate(values);
+		protected void onProgressUpdate(Bitmap... imgs) {
+			super.onProgressUpdate(imgs);
 			// showDialog(PROGRESS_DLG_ID);
+
+			adapter.mThumbIds.add(imgs[0]);
+			adapter.notifyDataSetChanged();
 		}
 
 		@Override
 		protected void onPostExecute(ArrayList<Bitmap> result) {
 			super.onPostExecute(result);
-
-			ImageAdapter adapter = new ImageAdapter(MainActivity.this, result);
-			gridview.setAdapter(adapter);
-			gridview.setOnItemClickListener(MainActivity.this);
 			progDialog.hide();
-			/*
-			 * for (Integer i = 0; i < result.size(); i++) {
-			 * 
-			 * img1.setImageBitmap(result.get(i));
-			 * img2.setImageBitmap(result.get(i));
-			 * img3.setImageBitmap(result.get(i)); }
-			 */
-			// dismissDialog(PROGRESS_DLG_ID);
-			// Log.d("DDD", "DDD" + result);
-			// img.setImageBitmap(resulti);
+	
 		}
 	}
 

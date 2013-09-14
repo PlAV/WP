@@ -27,9 +27,10 @@ public class ImageAdapter extends BaseAdapter {
 	final static String DEBUG_TAG = "+++ImageDownloader+++";
 	ArrayList<Bitmap> mThumbIds;
 
-	public ImageAdapter(Context c, ArrayList<Bitmap> result) {
+	public ImageAdapter(Context c) {
+		mThumbIds = new ArrayList<Bitmap>();
 		mContext = c;
-		this.mThumbIds = result;
+		//this.mThumbIds = result;
 		// new DownloadImageTask().execute(urls);
 	}
 
