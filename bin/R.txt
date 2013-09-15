@@ -26,7 +26,7 @@ int drawable sample_5 0x7f020009
 int drawable sample_6 0x7f02000a
 int drawable sample_7 0x7f02000b
 int id RelativeLayout1 0x7f040013
-int id action_settings 0x7f040016
+int id action_settings 0x7f040017
 int id alignBounds 0x7f040002
 int id alignMargins 0x7f040003
 int id bottom 0x7f040005
@@ -39,6 +39,7 @@ int id end 0x7f040011
 int id fill 0x7f04000d
 int id fill_horizontal 0x7f04000b
 int id fill_vertical 0x7f040009
+int id full_image_view 0x7f040015
 int id gridview 0x7f040012
 int id horizontal 0x7f040000
 int id left 0x7f040006
@@ -46,11 +47,12 @@ int id right 0x7f040007
 int id start 0x7f040010
 int id top 0x7f040004
 int id tvPage 0x7f040014
-int id tvText 0x7f040015
+int id tvText 0x7f040016
 int id vertical 0x7f040001
 int layout activity_main 0x7f030000
 int layout fragment 0x7f030001
-int layout item 0x7f030002
+int layout full_image 0x7f030002
+int layout item 0x7f030003
 int menu main 0x7f080000
 int string action_settings 0x7f060001
 int string app_name 0x7f060000

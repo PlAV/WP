@@ -16,12 +16,14 @@ public class ImageAdapter extends BaseAdapter {
 	private final Context mContext;
 	ArrayList<Bitmap> bitmapArray;
 	final static String DEBUG_TAG = "+++ImageDownloader+++";
-	ArrayList<Bitmap> mThumbIds;
+	public static  ArrayList<Bitmap> mThumbIds = new ArrayList<Bitmap>();
 
 	public ImageAdapter(Context c) {
-		mThumbIds = new ArrayList<Bitmap>();
+		
 		mContext = c;
 	}
+
+
 
 	@Override
 	public int getCount() {

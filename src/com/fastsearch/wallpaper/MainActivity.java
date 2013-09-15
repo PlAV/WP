@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -21,7 +22,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.GridView;
 import android.widget.RelativeLayout.LayoutParams;
-import android.widget.Toast;
 
 public class MainActivity extends Activity implements OnItemClickListener,
 		OnItemLongClickListener, OnTouchListener {
@@ -29,7 +29,7 @@ public class MainActivity extends Activity implements OnItemClickListener,
 	GridView gvMain;
 	ProgressDialog progDialog;
 	final static String DEBUG_TAG = "ImageDownloader";
-	ArrayList<Bitmap> bitmapArray;
+	ArrayList<Bitmap> bitmapArray ;//= new ArrayList<Bitmap>();;
 	GridView gridview;
 	ImageAdapter adapter;
 	public Boolean firstLoad = true;
@@ -46,48 +46,56 @@ public class MainActivity extends Activity implements OnItemClickListener,
 	LayoutParams layoutParams;
 
 	String[] urls = {
-			"http://apps-oracle.ru/wp-content/uploads/2010/11/evelution5rt.jpg",
-			"http://im5-tub-ua.yandex.net/i?id=198669864-36-72&n=21",
-			"http://im4-tub-ua.yandex.net/i?id=333891059-51-72&n=21",
-			"http://im7-tub-ua.yandex.net/i?id=88448043-39-72&n=21",
-			"http://im6-tub-ua.yandex.net/i?id=181222475-38-72&n=21",
-			"http://im5-tub-ua.yandex.net/i?id=198669864-36-72&n=21",
-			"http://im4-tub-ua.yandex.net/i?id=333891059-51-72&n=21",
-			"http://im7-tub-ua.yandex.net/i?id=88448043-39-72&n=21",
-			"http://im6-tub-ua.yandex.net/i?id=181222475-38-72&n=21",
-			"http://im5-tub-ua.yandex.net/i?id=198669864-36-72&n=21",
-			"http://im4-tub-ua.yandex.net/i?id=333891059-51-72&n=21",
-			"http://im7-tub-ua.yandex.net/i?id=88448043-39-72&n=21",
-			"http://im6-tub-ua.yandex.net/i?id=181222475-38-72&n=21",
-			"http://im5-tub-ua.yandex.net/i?id=198669864-36-72&n=21",
-			"http://im4-tub-ua.yandex.net/i?id=333891059-51-72&n=21",
-			"http://im7-tub-ua.yandex.net/i?id=88448043-39-72&n=21",
-			"http://im6-tub-ua.yandex.net/i?id=181222475-38-72&n=21",
-			"http://im5-tub-ua.yandex.net/i?id=198669864-36-72&n=21",
-			"http://im4-tub-ua.yandex.net/i?id=333891059-51-72&n=21",
-			"http://im7-tub-ua.yandex.net/i?id=88448043-39-72&n=21",
-			"http://im6-tub-ua.yandex.net/i?id=181222475-38-72&n=21",
-			"http://im5-tub-ua.yandex.net/i?id=198669864-36-72&n=21",
-			"http://im4-tub-ua.yandex.net/i?id=333891059-51-72&n=21",
-			"http://im7-tub-ua.yandex.net/i?id=88448043-39-72&n=21",
-			"http://im6-tub-ua.yandex.net/i?id=181222475-38-72&n=21",
-			"http://im5-tub-ua.yandex.net/i?id=198669864-36-72&n=21",
-			"http://im4-tub-ua.yandex.net/i?id=333891059-51-72&n=21",
-			"http://im7-tub-ua.yandex.net/i?id=88448043-39-72&n=21",
-			"http://im6-tub-ua.yandex.net/i?id=181222475-38-72&n=21",
-			"http://im5-tub-ua.yandex.net/i?id=198669864-36-72&n=21",
-			"http://im4-tub-ua.yandex.net/i?id=333891059-51-72&n=21",
-			"http://im7-tub-ua.yandex.net/i?id=88448043-39-72&n=21",
-			"http://im6-tub-ua.yandex.net/i?id=181222475-38-72&n=21",
-			"http://im5-tub-ua.yandex.net/i?id=198669864-36-72&n=21",
-			"http://im4-tub-ua.yandex.net/i?id=333891059-51-72&n=21",
-			"http://im7-tub-ua.yandex.net/i?id=88448043-39-72&n=21",
-			"http://im6-tub-ua.yandex.net/i?id=181222475-38-72&n=21",
-			"http://im5-tub-ua.yandex.net/i?id=198669864-36-72&n=21",
-			"http://im4-tub-ua.yandex.net/i?id=333891059-51-72&n=21",
-			"http://im7-tub-ua.yandex.net/i?id=88448043-39-72&n=21",
-			"http://im6-tub-ua.yandex.net/i?id=181222475-38-72&n=21",
+			"http://thumbs.wallbase.cc//rozne/thumb-3032983.jpg",
+			"http://thumbs.wallbase.cc//rozne/thumb-3032983.jpg",
+			"http://thumbs.wallbase.cc//rozne/thumb-3032971.jpg",
+			"http://thumbs.wallbase.cc//rozne/thumb-3032967.jpg",
+			"http://thumbs.wallbase.cc//rozne/thumb-3032935.jpg",
+			"http://thumbs.wallbase.cc//rozne/thumb-3032936.jpg",
+			"http://thumbs.wallbase.cc//rozne/thumb-3032931.jpg",
+			"http://thumbs.wallbase.cc//rozne/thumb-3032937.jpg",
+			"http://thumbs.wallbase.cc//rozne/thumb-3032816.jpg",
+			"http://thumbs.wallbase.cc//rozne/thumb-3032835.jpg",
+			"http://thumbs.wallbase.cc//rozne/thumb-3032673.jpg",
+			"http://thumbs.wallbase.cc//rozne/thumb-3032674.jpg",
+			"http://thumbs.wallbase.cc//rozne/thumb-3032983.jpg",
+			"http://thumbs.wallbase.cc//rozne/thumb-3032971.jpg",
+			"http://thumbs.wallbase.cc//rozne/thumb-3032967.jpg",
+			"http://thumbs.wallbase.cc//rozne/thumb-3032935.jpg",
+			"http://thumbs.wallbase.cc//rozne/thumb-3032936.jpg",
+			"http://thumbs.wallbase.cc//rozne/thumb-3032931.jpg",
+			"http://thumbs.wallbase.cc//rozne/thumb-3032937.jpg",
+			"http://thumbs.wallbase.cc//rozne/thumb-3032816.jpg",
+			"http://thumbs.wallbase.cc//rozne/thumb-3032835.jpg",
+			"http://thumbs.wallbase.cc//rozne/thumb-3032673.jpg",
+			"http://thumbs.wallbase.cc//rozne/thumb-3032674.jpg",
+			"http://thumbs.wallbase.cc//rozne/thumb-3032983.jpg",
+			"http://thumbs.wallbase.cc//rozne/thumb-3032971.jpg",
+			"http://thumbs.wallbase.cc//rozne/thumb-3032967.jpg",
+			"http://thumbs.wallbase.cc//rozne/thumb-3032935.jpg",
+			"http://thumbs.wallbase.cc//rozne/thumb-3032936.jpg",
+			"http://thumbs.wallbase.cc//rozne/thumb-3032931.jpg",
+			"http://thumbs.wallbase.cc//rozne/thumb-3032937.jpg",
+			"http://thumbs.wallbase.cc//rozne/thumb-3032816.jpg",
+			"http://thumbs.wallbase.cc//rozne/thumb-3032835.jpg",
+			"http://thumbs.wallbase.cc//rozne/thumb-3032673.jpg",
+			"http://thumbs.wallbase.cc//rozne/thumb-3032674.jpg",
+			"http://thumbs.wallbase.cc//rozne/thumb-3032983.jpg",
+			"http://thumbs.wallbase.cc//rozne/thumb-3032971.jpg",
+			"http://thumbs.wallbase.cc//rozne/thumb-3032967.jpg",
+			"http://thumbs.wallbase.cc//rozne/thumb-3032935.jpg",
+			"http://thumbs.wallbase.cc//rozne/thumb-3032936.jpg",
+			"http://thumbs.wallbase.cc//rozne/thumb-3032931.jpg",
+			"http://thumbs.wallbase.cc//rozne/thumb-3032937.jpg",
+			"http://thumbs.wallbase.cc//rozne/thumb-3032816.jpg",
+			"http://thumbs.wallbase.cc//rozne/thumb-3032835.jpg",
+			"http://thumbs.wallbase.cc//rozne/thumb-3032673.jpg",
+			"http://thumbs.wallbase.cc//rozne/thumb-3032674.jpg",
 			"http://sfw.so/uploads/posts/2013-09/thumbs/1379107019_vinos_01.jpg", };
+
+	/*public MainActivity(FullImageActivity fullImageActivity) {
+		// TODO Auto-generated constructor stub
+	}*/
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -223,8 +231,13 @@ public class MainActivity extends Activity implements OnItemClickListener,
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position,
 			long arg3) {
 		// TODO Auto-generated method stub
-		Toast.makeText(MainActivity.this, "" + position, Toast.LENGTH_SHORT)
-				.show();
+		/*Toast.makeText(MainActivity.this, "" + position, Toast.LENGTH_SHORT)
+				.show();*/
+		
+		Intent ful_image_intent = new Intent(MainActivity.this, FullImageActivity.class);
+		ful_image_intent.putExtra("id", position);
+		//ful_image_intent.putExtra("image", adapter.bitmapArray.get(position));
+		startActivity(ful_image_intent);
 
 	}
 
@@ -243,6 +256,7 @@ public class MainActivity extends Activity implements OnItemClickListener,
 		case MotionEvent.ACTION_UP:
 			endY = (int) Math.abs(event.getY());
 			if ((startY - endY) > 40) {
+				
 				new DownloadImageTask().execute(urls);
 			}
 			break;
@@ -256,5 +270,7 @@ public class MainActivity extends Activity implements OnItemClickListener,
 		// TODO Auto-generated method stub
 		return false;
 	}
+
+
 
 }
