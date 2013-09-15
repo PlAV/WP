@@ -28,7 +28,7 @@ public class MainActivity extends Activity implements OnItemClickListener,
 
 	GridView gvMain;
 	ProgressDialog progDialog;
-	final static String DEBUG_TAG = "+++ImageDownloader+++";
+	final static String DEBUG_TAG = "ImageDownloader";
 	ArrayList<Bitmap> bitmapArray;
 	GridView gridview;
 	ImageAdapter adapter;
@@ -36,11 +36,13 @@ public class MainActivity extends Activity implements OnItemClickListener,
 	public Integer loadedImg = 0;
 	public Integer totalImages = 0;
 	Integer loadingImg;
+
 	Integer startY = 0;
 	Integer endY = 0;
 	Integer moveY = 0;
 	Integer final_y = 0;
 	Utils utils;
+
 	LayoutParams layoutParams;
 
 	String[] urls = {
@@ -129,41 +131,35 @@ public class MainActivity extends Activity implements OnItemClickListener,
 
 		@Override
 		protected ArrayList<Bitmap> doInBackground(String... params) {
-			bitmapArray = new ArrayList<Bitmap>();
 
+			bitmapArray = new ArrayList<Bitmap>();
 			totalImages = params.length;
 
 			Log.v(DEBUG_TAG, "firstLoad: " + firstLoad + "  / " + totalImages);
 			loadingImg = 0;
 			for (Integer i = 0; i < params.length; i++) {
-
+				/* All images loaded */
+				if (i == (totalImages)) {
+					Log.v(DEBUG_TAG, "break1" + i);
+					return null;
+				}
+				/* Loading at first */
 				if (firstLoad) {
 					if (i == (calcImagesOnScreen() + 2)) {
 						firstLoad = false;
 						break;
 					}
 				} else {
-					Log.v(DEBUG_TAG, "QQQ" + i + "/ "+(totalImages - 1));
-					
-					Log.v(DEBUG_TAG, "totalImages: i=" + i + "TTT /"
-							+ loadedImg + "/" + (calcImagesOnScreen() + 2)
-							+ "/" + (loadedImg + calcImagesOnScreen() + 2));
 
-					Log.v(DEBUG_TAG, "totalImages: " + totalImages + "/" + i);
-					if (i <= loadedImg) {
+					if (i < loadedImg) {
 						Log.v(DEBUG_TAG, "continue" + i);
 						continue;
-					} else if (i == (totalImages - 1)) {
-						Log.v(DEBUG_TAG, "break1" + i);
-						break;
 					} else if (i == (loadedImg + calcImagesOnScreen() + 2)) {
-						Log.v(DEBUG_TAG, "break2" + i);
+						Log.v(DEBUG_TAG, "break" + i);
 						break;
 					}
 
 				}
-				loadingImg = i;
-				Log.v(DEBUG_TAG, "ADD: " + i);
 
 				InputStream input = null;
 				try {
@@ -172,7 +168,10 @@ public class MainActivity extends Activity implements OnItemClickListener,
 					Bitmap img = BitmapFactory.decodeStream(input);
 					publishProgress(img);
 
-					// bitmapArray.add(img);
+					loadingImg++;
+
+					Log.v(DEBUG_TAG, "ADD: " + loadingImg);
+
 				} catch (MalformedURLException e) {
 					Log.d(DEBUG_TAG, "Oops, Something wrong with URL...");
 					e.printStackTrace();
@@ -183,10 +182,8 @@ public class MainActivity extends Activity implements OnItemClickListener,
 				}
 
 			}
-			loadedImg += loadingImg;
-			Log.v(DEBUG_TAG, "loadedImg: i=" + loadedImg);
-			//
 
+			loadedImg += loadingImg;
 			return null;
 		}
 
@@ -228,7 +225,7 @@ public class MainActivity extends Activity implements OnItemClickListener,
 		// TODO Auto-generated method stub
 		Toast.makeText(MainActivity.this, "" + position, Toast.LENGTH_SHORT)
 				.show();
-		new DownloadImageTask().execute(urls);
+
 	}
 
 	@Override
@@ -241,12 +238,13 @@ public class MainActivity extends Activity implements OnItemClickListener,
 			break;
 		case MotionEvent.ACTION_MOVE:
 			moveY = (int) Math.abs(event.getY());
-			if ((startY - endY) > 40) {
-
-			}
+			
 			break;
 		case MotionEvent.ACTION_UP:
 			endY = (int) Math.abs(event.getY());
+			if ((startY - endY) > 40) {
+				new DownloadImageTask().execute(urls);
+			}
 			break;
 		}
 		return false;
