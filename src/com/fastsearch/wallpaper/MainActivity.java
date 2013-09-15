@@ -13,94 +13,166 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.GridView;
-import android.widget.ImageView;
+import android.widget.RelativeLayout.LayoutParams;
 import android.widget.Toast;
 
-public class MainActivity extends Activity implements OnItemClickListener {
+public class MainActivity extends Activity implements OnItemClickListener,
+		OnItemLongClickListener, OnTouchListener {
 
 	GridView gvMain;
 	ProgressDialog progDialog;
-	// ArrayAdapter<String> adapter;
-	ImageView img1, img2, img3, img4, img5;
-
-	final int PROGRESS_DLG_ID = 666;
 	final static String DEBUG_TAG = "+++ImageDownloader+++";
 	ArrayList<Bitmap> bitmapArray;
 	GridView gridview;
 	ImageAdapter adapter;
+	public Boolean firstLoad = true;
+	public Integer loadedImg = 0;
+	public Integer totalImages = 0;
+	Integer loadingImg;
+	Integer startY = 0;
+	Integer endY = 0;
+	Integer moveY = 0;
+	Integer final_y = 0;
+	Utils utils;
+	LayoutParams layoutParams;
 
-	String[] urls = { "http://huuah.com/images/progress2.png",
-			"http://huuah.com/images/progress2.png",
-			"http://huuah.com/images/progress2.png",
-			"http://huuah.com/images/progress2.png",
-			"http://huuah.com/images/progress2.png",
-			"http://huuah.com/images/progress2.png",
-			"http://huuah.com/images/progress2.png",
-			"http://huuah.com/images/progress2.png",
-			"http://huuah.com/images/progress2.png",
-			"http://huuah.com/images/progress2.png",
-			"http://huuah.com/images/progress2.png",
-			"http://huuah.com/images/progress2.png",
-			"http://huuah.com/images/progress2.png",
-			"http://huuah.com/images/progress2.png",
-			"http://huuah.com/images/progress2.png",
-			"http://huuah.com/images/progress2.png",
-			"http://huuah.com/images/progress2.png",
-			"http://huuah.com/images/progress2.png",
-			"http://huuah.com/images/progress2.png",
-			"http://huuah.com/images/progress2.png",
-			"http://huuah.com/images/progress2.png",
-			"http://huuah.com/images/progress2.png",
-			"http://huuah.com/images/progress2.png",
-			"http://huuah.com/images/progress2.png",
-			"http://huuah.com/images/progress2.png",
-			"http://huuah.com/images/progress2.png",
-			"http://huuah.com/images/progress2.png",
-			"http://huuah.com/images/progress2.png",
-			"http://huuah.com/images/progress2.png", };
+	String[] urls = {
+			"http://apps-oracle.ru/wp-content/uploads/2010/11/evelution5rt.jpg",
+			"http://im5-tub-ua.yandex.net/i?id=198669864-36-72&n=21",
+			"http://im4-tub-ua.yandex.net/i?id=333891059-51-72&n=21",
+			"http://im7-tub-ua.yandex.net/i?id=88448043-39-72&n=21",
+			"http://im6-tub-ua.yandex.net/i?id=181222475-38-72&n=21",
+			"http://im5-tub-ua.yandex.net/i?id=198669864-36-72&n=21",
+			"http://im4-tub-ua.yandex.net/i?id=333891059-51-72&n=21",
+			"http://im7-tub-ua.yandex.net/i?id=88448043-39-72&n=21",
+			"http://im6-tub-ua.yandex.net/i?id=181222475-38-72&n=21",
+			"http://im5-tub-ua.yandex.net/i?id=198669864-36-72&n=21",
+			"http://im4-tub-ua.yandex.net/i?id=333891059-51-72&n=21",
+			"http://im7-tub-ua.yandex.net/i?id=88448043-39-72&n=21",
+			"http://im6-tub-ua.yandex.net/i?id=181222475-38-72&n=21",
+			"http://im5-tub-ua.yandex.net/i?id=198669864-36-72&n=21",
+			"http://im4-tub-ua.yandex.net/i?id=333891059-51-72&n=21",
+			"http://im7-tub-ua.yandex.net/i?id=88448043-39-72&n=21",
+			"http://im6-tub-ua.yandex.net/i?id=181222475-38-72&n=21",
+			"http://im5-tub-ua.yandex.net/i?id=198669864-36-72&n=21",
+			"http://im4-tub-ua.yandex.net/i?id=333891059-51-72&n=21",
+			"http://im7-tub-ua.yandex.net/i?id=88448043-39-72&n=21",
+			"http://im6-tub-ua.yandex.net/i?id=181222475-38-72&n=21",
+			"http://im5-tub-ua.yandex.net/i?id=198669864-36-72&n=21",
+			"http://im4-tub-ua.yandex.net/i?id=333891059-51-72&n=21",
+			"http://im7-tub-ua.yandex.net/i?id=88448043-39-72&n=21",
+			"http://im6-tub-ua.yandex.net/i?id=181222475-38-72&n=21",
+			"http://im5-tub-ua.yandex.net/i?id=198669864-36-72&n=21",
+			"http://im4-tub-ua.yandex.net/i?id=333891059-51-72&n=21",
+			"http://im7-tub-ua.yandex.net/i?id=88448043-39-72&n=21",
+			"http://im6-tub-ua.yandex.net/i?id=181222475-38-72&n=21",
+			"http://im5-tub-ua.yandex.net/i?id=198669864-36-72&n=21",
+			"http://im4-tub-ua.yandex.net/i?id=333891059-51-72&n=21",
+			"http://im7-tub-ua.yandex.net/i?id=88448043-39-72&n=21",
+			"http://im6-tub-ua.yandex.net/i?id=181222475-38-72&n=21",
+			"http://im5-tub-ua.yandex.net/i?id=198669864-36-72&n=21",
+			"http://im4-tub-ua.yandex.net/i?id=333891059-51-72&n=21",
+			"http://im7-tub-ua.yandex.net/i?id=88448043-39-72&n=21",
+			"http://im6-tub-ua.yandex.net/i?id=181222475-38-72&n=21",
+			"http://im5-tub-ua.yandex.net/i?id=198669864-36-72&n=21",
+			"http://im4-tub-ua.yandex.net/i?id=333891059-51-72&n=21",
+			"http://im7-tub-ua.yandex.net/i?id=88448043-39-72&n=21",
+			"http://im6-tub-ua.yandex.net/i?id=181222475-38-72&n=21",
+			"http://sfw.so/uploads/posts/2013-09/thumbs/1379107019_vinos_01.jpg", };
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		gridview = (GridView) findViewById(R.id.gridview);
-
-		progDialog = new ProgressDialog(MainActivity.this);
-		progDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-		progDialog.setMessage("Loading...");
-		//progDialog.setCancelable(false);
-		progDialog.show();
-
+		setupViews();
+		showProgress();
 		new DownloadImageTask().execute(urls);
+		utils = new Utils(this);
+		layoutParams = (LayoutParams) gridview.getLayoutParams();
+		gridview.setOnItemClickListener(this);
+		gridview.setOnTouchListener(this);
+	}
 
+	public void setupViews() {
+		gridview = (GridView) findViewById(R.id.gridview);
 		adapter = new ImageAdapter(MainActivity.this);
 		gridview.setAdapter(adapter);
 		gridview.setOnItemClickListener(MainActivity.this);
-
 	}
 
-	class DownloadImageTask extends AsyncTask<String, Bitmap, ArrayList<Bitmap>> {
+	public void showProgress() {
+		progDialog = new ProgressDialog(MainActivity.this);
+		progDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+		progDialog.setMessage("Loading...");
+		// progDialog.setCancelable(false);
+		progDialog.show();
+	}
+
+	public Integer calcImagesOnScreen() {
+
+		Integer heightOfImg = utils.getScreenSize("width") / 2;
+		Integer numOfRows = Math.round(utils.getScreenSize("height")
+				/ heightOfImg);
+		Integer numOfImages = numOfRows * 2;
+		return numOfImages;
+	}
+
+	class DownloadImageTask extends
+			AsyncTask<String, Bitmap, ArrayList<Bitmap>> {
 
 		@Override
 		protected ArrayList<Bitmap> doInBackground(String... params) {
-		//	publishProgress(new Void[] {});
-
 			bitmapArray = new ArrayList<Bitmap>();
-			Integer count = 0;
+
+			totalImages = params.length;
+
+			Log.v(DEBUG_TAG, "firstLoad: " + firstLoad + "  / " + totalImages);
+			loadingImg = 0;
 			for (Integer i = 0; i < params.length; i++) {
-				count++;
+
+				if (firstLoad) {
+					if (i == (calcImagesOnScreen() + 2)) {
+						firstLoad = false;
+						break;
+					}
+				} else {
+					Log.v(DEBUG_TAG, "QQQ" + i + "/ "+(totalImages - 1));
+					
+					Log.v(DEBUG_TAG, "totalImages: i=" + i + "TTT /"
+							+ loadedImg + "/" + (calcImagesOnScreen() + 2)
+							+ "/" + (loadedImg + calcImagesOnScreen() + 2));
+
+					Log.v(DEBUG_TAG, "totalImages: " + totalImages + "/" + i);
+					if (i <= loadedImg) {
+						Log.v(DEBUG_TAG, "continue" + i);
+						continue;
+					} else if (i == (totalImages - 1)) {
+						Log.v(DEBUG_TAG, "break1" + i);
+						break;
+					} else if (i == (loadedImg + calcImagesOnScreen() + 2)) {
+						Log.v(DEBUG_TAG, "break2" + i);
+						break;
+					}
+
+				}
+				loadingImg = i;
+				Log.v(DEBUG_TAG, "ADD: " + i);
+
 				InputStream input = null;
 				try {
 					URL urlConn = new URL(params[i]);
 					input = urlConn.openStream();
 					Bitmap img = BitmapFactory.decodeStream(input);
-					
 					publishProgress(img);
-					bitmapArray.add(img);
+
+					// bitmapArray.add(img);
 				} catch (MalformedURLException e) {
 					Log.d(DEBUG_TAG, "Oops, Something wrong with URL...");
 					e.printStackTrace();
@@ -111,6 +183,8 @@ public class MainActivity extends Activity implements OnItemClickListener {
 				}
 
 			}
+			loadedImg += loadingImg;
+			Log.v(DEBUG_TAG, "loadedImg: i=" + loadedImg);
 			//
 
 			return null;
@@ -133,7 +207,7 @@ public class MainActivity extends Activity implements OnItemClickListener {
 		protected void onPostExecute(ArrayList<Bitmap> result) {
 			super.onPostExecute(result);
 			progDialog.hide();
-	
+
 		}
 	}
 
@@ -154,6 +228,35 @@ public class MainActivity extends Activity implements OnItemClickListener {
 		// TODO Auto-generated method stub
 		Toast.makeText(MainActivity.this, "" + position, Toast.LENGTH_SHORT)
 				.show();
+		new DownloadImageTask().execute(urls);
+	}
+
+	@Override
+	public boolean onTouch(View v, MotionEvent event) {
+		// TODO Auto-generated method stub
+		int Action = event.getAction();
+		switch (Action) {
+		case MotionEvent.ACTION_DOWN:
+			startY = (int) Math.abs(event.getY());
+			break;
+		case MotionEvent.ACTION_MOVE:
+			moveY = (int) Math.abs(event.getY());
+			if ((startY - endY) > 40) {
+
+			}
+			break;
+		case MotionEvent.ACTION_UP:
+			endY = (int) Math.abs(event.getY());
+			break;
+		}
+		return false;
+	}
+
+	@Override
+	public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int arg2,
+			long arg3) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

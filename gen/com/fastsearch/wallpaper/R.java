@@ -238,8 +238,7 @@ containing a value of this type.
         public static final int sample_7=0x7f02000b;
     }
     public static final class id {
-        public static final int RelativeLayout1=0x7f040018;
-        public static final int action_settings=0x7f04001b;
+        public static final int action_settings=0x7f040014;
         public static final int alignBounds=0x7f040002;
         public static final int alignMargins=0x7f040003;
         public static final int bottom=0x7f040005;
@@ -254,23 +253,16 @@ containing a value of this type.
         public static final int fill_vertical=0x7f040009;
         public static final int gridview=0x7f040012;
         public static final int horizontal=0x7f040000;
-        public static final int image1=0x7f040013;
-        public static final int image2=0x7f040014;
-        public static final int image3=0x7f040015;
-        public static final int image4=0x7f040016;
-        public static final int image5=0x7f040017;
         public static final int left=0x7f040006;
         public static final int right=0x7f040007;
         public static final int start=0x7f040010;
         public static final int top=0x7f040004;
-        public static final int tvPage=0x7f040019;
-        public static final int tvText=0x7f04001a;
+        public static final int tvText=0x7f040013;
         public static final int vertical=0x7f040001;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
-        public static final int fragment=0x7f030001;
-        public static final int item=0x7f030002;
+        public static final int item=0x7f030001;
     }
     public static final class menu {
         public static final int main=0x7f080000;
