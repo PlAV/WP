@@ -1,37 +1,46 @@
 package com.fastsearch.wallpaper;
 
+import java.io.IOException;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.WallpaperManager;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toast;
 
-public class FullImageActivity extends Activity {
+public class FullImageActivity extends Activity implements OnClickListener {
+
+	Bitmap img;
+	Button set_wp, save_img;
+
 	@SuppressLint("NewApi")
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.full_image);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
-		
+
 		getActionBar().setTitle("Back");
 		getActionBar().setLogo(R.drawable.back);
-		// get intent data
-		Intent i = getIntent();
 
-		// Selected image id
+		Intent i = getIntent();
 		int position = i.getExtras().getInt("id");
-		// int adapter = i.getExtras().getInt("adapter");
-		// ImageAdapter imageAdapter = new ImageAdapter(this);
-		// MainActivity MainActivty = new MainActivity(this);
+
+		img = ImageAdapter.mThumbIds.get(position);
 
 		ImageView imageView = (ImageView) findViewById(R.id.full_image_view);
-		// imageView.setImageResource(R.drawable.img8);
-		// Toast.makeText(this, "" + MainActivty.adapter.getCount(),
-		// Toast.LENGTH_SHORT)
-		// .show();
-		imageView.setImageBitmap(ImageAdapter.mThumbIds.get(position));
+		imageView.setImageBitmap(img);
+
+		set_wp = (Button) findViewById(R.id.set_wp);
+		save_img = (Button) findViewById(R.id.save_img);
+
+		set_wp.setOnClickListener(this);
+		save_img.setOnClickListener(this);
 	}
 
 	@Override
@@ -45,6 +54,27 @@ public class FullImageActivity extends Activity {
 
 		default:
 			return super.onOptionsItemSelected(item);
+		}
+	}
+
+	@Override
+	public void onClick(View v) {
+		// TODO Auto-generated method stub
+		switch (v.getId()) {
+		case R.id.set_wp:
+			WallpaperManager wpm = WallpaperManager.getInstance(this);
+			try {
+				wpm.setBitmap(img);
+
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			break;
+		case R.id.save_img:
+
+			break;
+
 		}
 	}
 }

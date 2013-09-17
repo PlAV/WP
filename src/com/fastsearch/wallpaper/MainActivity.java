@@ -55,7 +55,7 @@ public class MainActivity extends Activity implements OnItemClickListener,
 	LayoutParams layoutParams;
 
 	String[] urls = {
-			"http://thumbs.wallbase.cc//rozne/thumb-3032983.jpg",
+			"http://wallpapers.wallbase.cc/rozne/wallpaper-3032983.jpg",
 			"http://thumbs.wallbase.cc//rozne/thumb-3032983.jpg",
 			"http://thumbs.wallbase.cc//rozne/thumb-3032971.jpg",
 			"http://thumbs.wallbase.cc//rozne/thumb-3032967.jpg",
@@ -621,7 +621,7 @@ public class MainActivity extends Activity implements OnItemClickListener,
 		// types
 		bmp = Bitmap.createBitmap(100, 100, conf); // this creates a
 		for (Integer i = 0; i < urls.length; i++) {
-			adapter.mThumbIds.add(bmp);
+			ImageAdapter.mThumbIds.add(bmp);
 		}
 		adapter.notifyDataSetChanged();
 
